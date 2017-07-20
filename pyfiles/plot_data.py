@@ -261,7 +261,7 @@ if GRID_1_V[0] != "ignore" and GRID_1_I[0] != "ignore":
   a = plot_V_I(time, date, GRID_1_V, GRID_1_I, "Grid", "./" + sys.argv[4] + "/Grid/", tmin, tmax)
 
 ###################### all V and I
-plot_LEMS = True
+plot_LEMs = True
 for i in range(0,len(LEM_Down_V)):
   if LEM_Down_V[i][0] == "ignore" or LEM_Down_I[i][0] == "ignore" or LEM_Up_V[i][0] == "ignore" or LEM_Up_I[i][0] == "ignore":
     plot_LEMs = False

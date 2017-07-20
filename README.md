@@ -8,5 +8,5 @@ Scripts to copy data and plot histograms from wa105db
   -plot_data.py is where you will call those functions.
 -param_list.txt contains all the parameters that should be in the datafile. If a parameter asked in plot_data.py is not in the param_list.txt, it is ignored. Same if it is in param_list.txt but not in datafile. 
 
-WARNING: Do not remove any function in plot_function.py, just comment them in plot_data.py. Same pour parameters in param_list.
+WARNING: Do not remove any function in plot_function.py, just comment them in plot_data.py. Same for parameters in param_list.
 
