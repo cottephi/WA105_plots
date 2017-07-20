@@ -485,7 +485,6 @@ def plot_single_LEM(time, date, const_LEMI_up, const_LEMI_down, const_temperatur
   return 0 
 
 
-
 ##############################################################################################
 # All voltages and currents over time
 ##############################################################################################
@@ -767,7 +766,102 @@ def plot_all_LEMs_V_I(time, date, const_LEMsV_up, const_LEMsI_up, const_LEMsV_do
   
   return 0
   
+
+##############################################################################################
+# All LEM currents scaled to study leackages
+##############################################################################################
+
+def plot_all_LEMs_leackage(time, date, const_LEMsI_up, const_LEMsI_down, Imax, path, title, tmin = 0, tmax = 1):
   
+  is_list = isinstance(const_LEMsI_up,list) and isinstance(const_LEMsI_down,list)
+  if is_list == False: 
+    print("ERROR in plot_all_LEMs_leackage: Must give a list all LEMs for leackage plot")
+    return
+  
+  if((tmin == 0) & (tmax == 1)):
+    tmin = time[0]
+    tmax = tmin + time[len(time) - 1]
+
+  zoom = time[(time >= tmin) & (time <= tmax)]
+  LEMsI_up = []
+  LEMsI_down = []
+  
+  for i in range(0,len(const_LEMsI_up)):
+    LEMsI_up.append(const_LEMsI_up[i][(time >= tmin) & (time <= tmax)])
+    LEMsI_down.append(const_LEMsI_down[i][(time >= tmin) & (time <= tmax)])
+
+  col = [ROOT.kBlack, ROOT.kCyan, ROOT.kBlue, ROOT.kRed, ROOT.kGreen, ROOT.kYellow, ROOT.kYellow+2, ROOT.kMagenta, ROOT.kGreen+2, ROOT.kGray, ROOT.kPink+2, ROOT.kMagenta+2]
+
+  
+  cLU = ROOT.TCanvas("cLU","cLU",2000,1200)
+  leg = ROOT.TLegend(0,0,1,0.1)
+  leg.SetNColumns(6)
+  
+  top_padLU = ROOT.TPad("top_padLU", "top_padLU",0,0.55, 1.0, 1.0)
+  top_padLU.Draw()
+  top_padLU.cd()
+  top_padLU.SetTopMargin(0.2)
+  top_padLU.SetBottomMargin(0.05)
+  top_padLU.SetGrid()
+  mgrI_up = ROOT.TMultiGraph()
+  grmI_up = [ ROOT.TGraph(len(zoom), zoom, lemsI_UP) for lemsI_UP in LEMsI_up ]
+  for i, grI_up, color in zip(range(0,len(LEMsI_up)), grmI_up, col):
+    grI_up.SetLineWidth(1)
+    grI_up.SetLineColor(color)
+    leg.AddEntry(grI_up,"LEM %i" %(i+1), "l")
+    mgrI_up.Add(grI_up)
+  mgrI_up.Draw("AL")
+  mgrI_up.SetTitle(title + "_" + date)
+  mgrI_up.GetYaxis().SetLabelSize(0.07)
+  mgrI_up.SetMinimum(0)
+  mgrI_up.SetMaximum(Imax)
+  mgrI_up.GetXaxis().SetTitle("")
+  mgrI_up.GetXaxis().SetLabelSize(0)
+  mgrI_up.GetXaxis().SetNdivisions(10,4,0,ROOT.kFALSE)
+  mgrI_up.GetYaxis().SetTitle("Current up [uA]")
+  mgrI_up.GetYaxis().SetTitleOffset(0.5)
+  mgrI_up.GetYaxis().SetTitleSize(mgrI_up.GetYaxis().GetTitleSize()*2.5)
+  cLU.cd()
+  
+  bottom_padLU = ROOT.TPad("bottom_padLU", "bottom_padLU",0,0.1, 1.0, 0.55)
+  bottom_padLU.Draw()
+  bottom_padLU.cd()
+  bottom_padLU.SetTopMargin(0.05)
+  bottom_padLU.SetBottomMargin(0.2)
+  bottom_padLU.SetGrid()
+  mgrI_down = ROOT.TMultiGraph()
+  grmI_down = [ ROOT.TGraph(len(zoom), zoom, lemsI_DOWN) for lemsI_DOWN in LEMsI_down ]
+  for i, grI_down, color in zip(range(0,len(LEMsI_down)), grmI_down, col):
+    grI_down.SetLineWidth(1)
+    grI_down.SetLineColor(color)
+    mgrI_down.Add(grI_down)
+  mgrI_down.Draw("AL")
+  mgrI_down.SetTitle("")
+  mgrI_down.GetYaxis().SetLabelSize(0.07)
+  mgrI_down.SetMinimum(0)
+  mgrI_down.SetMaximum(Imax)
+  mgrI_down.GetXaxis().SetTimeDisplay(1)
+  mgrI_down.GetXaxis().SetTimeFormat("%H: %M %F1970-01-01 00:00:00")
+  mgrI_down.GetXaxis().SetTitle("")
+  mgrI_down.GetXaxis().SetLimits(zoom[0], zoom[-1])
+  mgrI_down.GetXaxis().SetLabelSize(0.08)
+  mgrI_down.GetXaxis().SetLabelOffset(0.05)
+  mgrI_down.GetXaxis().SetNdivisions(10,4,0,ROOT.kFALSE)
+  mgrI_down.GetYaxis().SetTitle("Current down [uA]")
+  mgrI_down.GetYaxis().SetTitleOffset(0.5)
+  mgrI_down.GetYaxis().SetTitleSize(mgrI_down.GetYaxis().GetTitleSize()*2.5)
+  cLU.cd()
+
+  leg.SetTextSize(leg.GetTextSize()*0.2)
+  leg.Draw()
+  cLU.SetLeftMargin(0.1)
+  cLU.SaveAs(path + title + "_" + date +  ".pdf")
+  cLU.SaveAs(path + title + "_" + date + ".root")
+  cLU.Close()
+  
+  return 0
+  
+
 def plot_all_V_I(time, date, const_cathode_voltage, const_cathode_current, const_grid_voltage, const_grid_current, const_LEMsV_up, const_LEMsI_up, const_LEMsV_down, const_LEMsI_down, const_LV_8, tmin = 0, tmax = 1):
   
   title = "Cathode_Grid"
