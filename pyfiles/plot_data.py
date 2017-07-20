@@ -237,12 +237,12 @@ for i in range(0,len(LEM_Down_V)):
   if LEM_Down_V[i][0] == "ignore" or LEM_Down_I[i][0] == "ignore" or LEM_Up_V[i][0] == "ignore" or LEM_Up_I[i][0] == "ignore":
     plot_LEMs = False
 
-if plot_LEMs == True:
+if plot_LEMs == True and Hall_T[0] != "":
   if not os.path.isdir(sys.argv[4] + "/leackage"):
     os.system("mkdir " + sys.argv[4] + "/leackage")
   path = "./" + sys.argv[4] + "/leackage/"
   title = "all_LEMs_leackage"
-  a = plot_all_LEMs_leackage(time, date, LEM_Up_I, LEM_Down_I, 0.01, path, title, tmin, tmax)
+  a = plot_all_LEMs_leackage(time, date, LEM_Up_I, LEM_Down_I, 0.01, Hall_T, path, title, tmin, tmax)
 
 ###################### LEMs + grid
 if GRID_1_V[0] != "ignore" and GRID_1_I[0] != "ignore":

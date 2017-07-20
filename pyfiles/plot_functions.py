@@ -771,7 +771,7 @@ def plot_all_LEMs_V_I(time, date, const_LEMsV_up, const_LEMsI_up, const_LEMsV_do
 # All LEM currents scaled to study leackages
 ##############################################################################################
 
-def plot_all_LEMs_leackage(time, date, const_LEMsI_up, const_LEMsI_down, Imax, path, title, tmin = 0, tmax = 1):
+def plot_all_LEMs_leackage(time, date, const_LEMsI_up, const_LEMsI_down, Imax, const_Hall_T, path, title, tmin = 0, tmax = 1):
   
   is_list = isinstance(const_LEMsI_up,list) and isinstance(const_LEMsI_down,list)
   if is_list == False: 
@@ -785,7 +785,7 @@ def plot_all_LEMs_leackage(time, date, const_LEMsI_up, const_LEMsI_down, Imax, p
   zoom = time[(time >= tmin) & (time <= tmax)]
   LEMsI_up = []
   LEMsI_down = []
-  
+  Hall_T = const_Hall_T[(time >= tmin) & (time <= tmax)]
   for i in range(0,len(const_LEMsI_up)):
     LEMsI_up.append(const_LEMsI_up[i][(time >= tmin) & (time <= tmax)])
     LEMsI_down.append(const_LEMsI_down[i][(time >= tmin) & (time <= tmax)])
@@ -797,12 +797,12 @@ def plot_all_LEMs_leackage(time, date, const_LEMsI_up, const_LEMsI_down, Imax, p
   leg = ROOT.TLegend(0,0,1,0.1)
   leg.SetNColumns(6)
   
-  top_padLU = ROOT.TPad("top_padLU", "top_padLU",0,0.55, 1.0, 1.0)
-  top_padLU.Draw()
-  top_padLU.cd()
-  top_padLU.SetTopMargin(0.2)
-  top_padLU.SetBottomMargin(0.05)
-  top_padLU.SetGrid()
+  top_padLUy1 = ROOT.TPad("top_padLUy1", "top_padLUy1",0,0.55, 1.0, 1.0)
+  top_padLUy1.Draw()
+  top_padLUy1.cd()
+  top_padLUy1.SetTopMargin(0.2)
+  top_padLUy1.SetBottomMargin(0.05)
+  top_padLUy1.SetGrid()
   mgrI_up = ROOT.TMultiGraph()
   grmI_up = [ ROOT.TGraph(len(zoom), zoom, lemsI_UP) for lemsI_UP in LEMsI_up ]
   for i, grI_up, color in zip(range(0,len(LEMsI_up)), grmI_up, col):
@@ -821,6 +821,29 @@ def plot_all_LEMs_leackage(time, date, const_LEMsI_up, const_LEMsI_down, Imax, p
   mgrI_up.GetYaxis().SetTitle("Current up [uA]")
   mgrI_up.GetYaxis().SetTitleOffset(0.5)
   mgrI_up.GetYaxis().SetTitleSize(mgrI_up.GetYaxis().GetTitleSize()*2.5)
+  cLU.cd()
+  
+  top_padLUy2 = ROOT.TPad("top_padLUy2", "top_padLUy2",0,0.55, 1.0, 1.0)
+  top_padLUy2.Draw()
+  top_padLUy2.cd()
+  top_padLUy2.SetTopMargin(0.2)
+  top_padLUy2.SetBottomMargin(0.05)
+  top_padLUy2.SetFillStyle(4000)
+  top_padLUy2.SetFillColor(0)
+  top_padLUy2.SetFrameFillStyle(4000)
+  gr_Hall_T = ROOT.TGraph(len(zoom), zoom, Hall_T)
+  gr_Hall_T.Draw("ALY+")
+  gr_Hall_T.GetXaxis().SetRangeUser(zoom[0],zoom[-1])
+  gr_Hall_T.SetLineColor(ROOT.kGreen)
+  gr_Hall_T.GetYaxis().SetTitle("Hall temperature [K]")
+  gr_Hall_T.SetTitle("")
+  gr_Hall_T.GetXaxis().SetTitle("")
+  gr_Hall_T.GetXaxis().SetLabelSize(0)
+  gr_Hall_T.GetXaxis().SetTickSize(0)
+  gr_Hall_T.GetYaxis().SetLabelSize(0.07) 
+  gr_Hall_T.GetYaxis().SetTitleSize(gr_Hall_T.GetYaxis().GetTitleSize()*2.5) 
+  gr_Hall_T.GetYaxis().SetTitleOffset(0.5)
+  leg.AddEntry(gr_Hall_T,"Hall temperature", "l")
   cLU.cd()
   
   bottom_padLU = ROOT.TPad("bottom_padLU", "bottom_padLU",0,0.1, 1.0, 0.55)
