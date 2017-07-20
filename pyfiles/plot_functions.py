@@ -202,13 +202,10 @@ def plot_pressures(time, date, const_pressures, title, path, tmin = 0, tmax = 1)
     
   zoom = time[(time >= tmin) & (time <= tmax)]
   if is_list == True:
-  
     pressures = []
-    
     for i in range(0,len(const_pressures)):
       pressures.append(const_pressures[i][(time >= tmin) & (time <= tmax)])
   else:
-    
     pressures = const_pressures[(time >= tmin) & (time <= tmax)]
   
   c1 = ROOT.TCanvas("c1", "dit", 2000, 1200)

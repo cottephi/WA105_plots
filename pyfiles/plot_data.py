@@ -45,7 +45,7 @@ def load_data(wanted_param):
   if wanted_param != "time":
     param = primer_load_data(wanted_param)
     if param == "":
-      return "ignore"
+      return ["ignore"]
     param = numpy.array( numpy.reshape(param, len(time)) )
     return param.astype(numpy.float)
   else:
@@ -177,11 +177,11 @@ if pressures[0][0] != "ignore":
 if pressures[1][0] != "ignore":
   if not os.path.isdir(sys.argv[4] + "/pressures"):
     os.system("mkdir " + sys.argv[4] + "/pressures")
-a = plot_pressures(time, date, pressures[1], "Diff_Pressure_Tank-Insulation", "./" + sys.argv[4] + "/pressures/", tmin, tmax)
+  a = plot_pressures(time, date, pressures[1], "Diff_Pressure_Tank-Insulation", "./" + sys.argv[4] + "/pressures/", tmin, tmax)
 if pressures[2][0] != "ignore":
   if not os.path.isdir(sys.argv[4] + "/pressures"):
     os.system("mkdir " + sys.argv[4] + "/pressures")
-a = plot_pressures(time, date, pressures[2], "Diff_Pressure_Tank_Atm", "./" + sys.argv[4] + "/pressures/", tmin, tmax)
+  a = plot_pressures(time, date, pressures[2], "Diff_Pressure_Tank_Atm", "./" + sys.argv[4] + "/pressures/", tmin, tmax)
 
 ###################### ribon chain 2 temperatures
 plot_temps = True
