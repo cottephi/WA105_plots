@@ -1,5 +1,9 @@
 #! /bin/bash
 
+if [ $# -ne 0 ] ; then
+  echo "WARNING: does not take arguments"
+fi
+
 for Dir in ./dir_* ; do
   dir_data=$(basename $Dir)
   if ! [ -d "$dir_data" ] ; then

@@ -1318,6 +1318,12 @@ def Plot_LM_RMS(time, date, level_array, title, tmin = 0, tmax = 1):
   
   time_array = numpy.array(time_list)
   rms_array = numpy.array(rms_list)
+  print("Mean levelmeters RMS: ")
+  for i in range(0,len(rms_array)):
+    if i+1 <=3:
+      print(str(i+1) + " " + "%.4f" %numpy.mean(rms_array[i]))
+    else:
+      print(str(i+2) + " " + "%.4f" %numpy.mean(rms_array[i]))
   
   grm = [ ROOT.TGraph(len(time_array), time_array, RMS) for RMS in rms_array ]
   j = 1
