@@ -182,6 +182,11 @@ if pressures[2][0] != "ignore":
   if not os.path.isdir(sys.argv[4] + "/pressures"):
     os.system("mkdir " + sys.argv[4] + "/pressures")
   a = plot_pressures(time, date, pressures[2], "Diff_Pressure_Tank_Atm", "./" + sys.argv[4] + "/pressures/", tmin, tmax)
+  
+if pressures[0][0] != "ignore" and pressures[1][0] != "ignore" and pressures[2][0] != "ignore":
+  if not os.path.isdir(sys.argv[4] + "/pressures"):
+    os.system("mkdir " + sys.argv[4] + "/pressures")
+  a = Plot_Pressure_RMS(time, date, pressures, "RMS", tmin, tmax)
 
 ###################### ribon chain 2 temperatures
 plot_temps = True
