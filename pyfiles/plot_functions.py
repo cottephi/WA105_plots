@@ -1862,4 +1862,86 @@ def plot_Box(time, date, Box, reference_level, level_name, reference_name, tmin 
   return 0
   
   
+##############################################################################################
+# Cathode RMS
+##############################################################################################
+
+def Plot_Cathode_RMS(time, date, const_VCathode, const_ICathode, title, tmin = 0, tmax = 1):
+
+  title2 = ["Voltage_" + title , "Current_" + title]
+  
+  if((tmin == 0) & (tmax == 1)):
+    tmin = time[0]
+    tmax = tmin + time[len(time) - 1]
+    
+  zoom = time[(time >= tmin) & (time <= tmax)]
+    
+  slices = (zoom[len(zoom)-1]-zoom[0])//(30*60)
+  rms_list = []
+  time_list = []
+  if tmax-tmin <= 30*60:
+    print "Time window too short for RMS of Cathode"
+    return 1
+  
+  for k in range(0,2):
+    rms = []
+    zoom_VorI = []
+    if k == 0:
+      zoom_VorI = const_VCathode[(time >= tmin) & (time <= tmax)]
+    if k == 1:
+      zoom_VorI = const_ICathode[(time >= tmin) & (time <= tmax)]    
+    for i in range(0,int(slices)+1):
+      time_window = zoom[(zoom >= tmin+i*30*60) & (zoom <= tmin+(i+1)*30*60)]
+      if len(time_window) == 1:
+        continue
+      if k == 0:
+        time_list.append(time_window[0])
+      VorI = zoom_VorI[(zoom >= tmin+i*30*60) & (zoom <= tmin+(i+1)*30*60)]
+      mean = 0
+      rms_tmp = 0
+      for j in range(0,len(time_window)):
+        mean += VorI[j]
+      mean = mean/len(time_window)
+      for j in range(0,len(time_window)):
+        rms_tmp += (VorI[j] - mean)*(VorI[j] - mean)
+      rms_tmp = rms_tmp/(len(time_window)-1)
+      rms.append(math.sqrt(rms_tmp))
+    rms_list.append(rms)
+    
+
+  time_array = numpy.array(time_list)
+  rms_array = numpy.array(rms_list)
+
+    
+  for i in range(0,len(rms_array)):
+  
+    c1 = ROOT.TCanvas("c1","c1",2200,1200)
+    c1.SetGrid()
+    c1.SetBottomMargin(0.2)
+      
+    gr = ROOT.TGraph(len(time_array), time_array, rms_array[i])
+    
+    gr.SetLineWidth(3)
+    gr.SetTitle("")
+    if i == 0: 
+      gr.SetLineColor(ROOT.kRed)
+      gr.GetYaxis().SetTitle("Cathode V RMS [kV]")
+    if i == 1:
+      gr.SetLineColor(ROOT.kBlue)
+      gr.GetYaxis().SetTitle("Cathode I RMS [uA]")
+    gr.Draw("AL")
+    gr.GetXaxis().SetTimeDisplay(1)
+    gr.GetXaxis().SetTimeFormat("%H: %M %F1970-01-01 00:00:00")
+    gr.GetXaxis().SetTitle("time")
+    gr.GetYaxis().SetTitleSize(0.05)
+    gr.GetYaxis().SetTitleOffset(1)
+    gr.Draw("AL")
+    
+    c1.SetLeftMargin(0.1)
+    c1.SaveAs("./" + sys.argv[4] + "/Cathode/" + title2[i] + "_" + date + ".pdf")
+    c1.SaveAs("./" + sys.argv[4] + "/Cathode/" + title2[i] + "_" + date + ".root")
+    c1.Close()
+  
+  return 0
+  
   

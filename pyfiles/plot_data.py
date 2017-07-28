@@ -266,6 +266,7 @@ if Cathode_V[0] != "ignore" and Cathode_I[0] != "ignore":
   if not os.path.isdir(sys.argv[4] + "/Cathode"):
     os.system("mkdir " + sys.argv[4] + "/Cathode")
   a = plot_V_I(time, date, Cathode_V, Cathode_I, "cathode", "./" + sys.argv[4] + "/Cathode/", tmin, tmax)
+  a = Plot_Cathode_RMS(time, date, Cathode_V, Cathode_I, "_RMS", tmin, tmax)
   
 ###################### Grid
 if GRID_1_V[0] != "ignore" and GRID_1_I[0] != "ignore":
